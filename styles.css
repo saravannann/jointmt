@@ -113,8 +113,9 @@ header.scrolled {
 }
 
 .nav-links a {
-    font-weight: 500;
-    font-size: 0.95rem;
+    font-weight: 600;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
 }
 
 .nav-links a:hover {

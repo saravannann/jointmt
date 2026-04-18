@@ -270,26 +270,26 @@ show their solidarity. TMT has been able to touch the lives of over
         </div>
 
         <div class="contact-container">
-            <div class="contact-form glass animate-fade-up">
+            <form class="contact-form glass animate-fade-up">
                 <div class="input-group">
                     <div class="form-field">
-                        <input type="text" placeholder="First name">
+                        <input type="text" id="firstName" placeholder="First name" required>
                     </div>
                     <div class="form-field">
-                        <input type="text" placeholder="Last name">
+                        <input type="text" id="lastName" placeholder="Last name" required>
                     </div>
                 </div>
                 <div class="form-field">
-                    <input type="email" placeholder="Your Email">
+                    <input type="email" id="email" placeholder="Your Email" required>
                 </div>
                 <div class="form-field">
-                    <input type="tel" placeholder="Phone Number">
+                    <input type="tel" id="phone" placeholder="Phone Number" required>
                 </div>
                 <div class="form-field">
-                    <textarea rows="5" placeholder="How can we help?"></textarea>
+                    <textarea id="message" rows="5" placeholder="How can we help?" required></textarea>
                 </div>
-                <button class="btn btn-primary" style="width: 100%;">SUBMIT</button>
-            </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">SUBMIT</button>
+            </form>
             
             <div class="contact-map animate-fade-up" style="min-height: 400px;">
                 <iframe 

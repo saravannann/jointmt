@@ -49,37 +49,64 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Form Submission Simulation
+// Form Submission Implementation
 const contactForm = document.querySelector('.contact-form');
 if (contactForm) {
-    const submitBtn = contactForm.querySelector('button');
-    submitBtn.addEventListener('click', (e) => {
+    contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        // Basic validation check
-        const inputs = contactForm.querySelectorAll('input, textarea');
-        let isValid = true;
-        inputs.forEach(input => {
-            if (!input.value.trim()) isValid = false;
-        });
+        const submitBtn = contactForm.querySelector('button');
+        
+        // Gather data
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const message = document.getElementById('message').value.trim();
 
-        if (!isValid) {
+        if (!firstName || !lastName || !email || !phone || !message) {
             alert('Please fill in all fields before submitting.');
             return;
         }
 
-        // Simulate success
-        submitBtn.innerHTML = '<i data-lucide="check"></i> Sent Successfully!';
-        lucide.createIcons(); // Re-run lucide to render the new icon
-        submitBtn.style.backgroundColor = '#2ecc71';
+        // Show loading state
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = 'Sending...';
         submitBtn.disabled = true;
-        
-        setTimeout(() => {
-            contactForm.reset();
-            submitBtn.innerHTML = 'SUBMIT';
-            submitBtn.style.backgroundColor = '';
+
+        // Send data to backend
+        fetch('send_email.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ firstName, lastName, email, phone, message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                submitBtn.innerHTML = '<i data-lucide="check"></i> Sent Successfully!';
+                lucide.createIcons(); // Re-run lucide to render the new icon
+                submitBtn.style.backgroundColor = '#2ecc71';
+                
+                setTimeout(() => {
+                    contactForm.reset();
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.style.backgroundColor = '';
+                    submitBtn.disabled = false;
+                    lucide.createIcons();
+                }, 3000);
+            } else {
+                alert('Error: ' + (data.message || 'Something went wrong.'));
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to send message. Please try again later.');
+            submitBtn.innerHTML = originalBtnText;
             submitBtn.disabled = false;
-            lucide.createIcons();
-        }, 3000);
+        });
     });
 }
