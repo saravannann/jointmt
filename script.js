@@ -74,17 +74,25 @@ if (contactForm) {
         submitBtn.innerHTML = 'Sending...';
         submitBtn.disabled = true;
 
-        // Send data to backend
-        fetch('send_email.php', {
+        // Send data to Web3Forms (Serverless)
+        fetch('https://api.web3forms.com/submit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
-            body: JSON.stringify({ firstName, lastName, email, phone, message })
+            body: JSON.stringify({ 
+                access_key: 'YOUR_WEB3FORMS_ACCESS_KEY_HERE', // TODO: REPLACE THIS 
+                subject: 'New Website Inquiry from ' + firstName,
+                from_name: firstName + ' ' + lastName,
+                email: email, 
+                phone: phone, 
+                message: message 
+            })
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
+        .then(async (response) => {
+            let json = await response.json();
+            if (response.status == 200) {
                 submitBtn.innerHTML = '<i data-lucide="check"></i> Sent Successfully!';
                 lucide.createIcons(); // Re-run lucide to render the new icon
                 submitBtn.style.backgroundColor = '#2ecc71';
@@ -97,7 +105,8 @@ if (contactForm) {
                     lucide.createIcons();
                 }, 3000);
             } else {
-                alert('Error: ' + (data.message || 'Something went wrong.'));
+                console.log(response);
+                alert('Error: ' + (json.message || 'Something went wrong.'));
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
             }
